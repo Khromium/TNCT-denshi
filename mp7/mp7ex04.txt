@@ -1,0 +1,117 @@
+mp7ex04.txt
+
+
+1.‰Û‘è
+w’è‚µ‚½ƒAƒhƒŒƒX‚©‚ç 0x100byte‚ğƒƒ‚ƒŠƒ_ƒ“ƒv‚·‚éƒvƒƒOƒ‰ƒ€‚ğì‚è‚È‚³‚¢B
+‚½‚¾‚µw’èƒAƒhƒŒƒX‚Í\˜Zi‚Ì‚P‚ÌˆÊ‚Í0‚Æ‚·‚éB
+ƒAƒhƒŒƒX‚ğ•\‚í‚·•Ï”‚Íunsigned long intŒ^‚É‚µCƒL[ƒ{[ƒh‚©‚ç‚Ìæ“ªƒAƒhƒŒƒX‚Ì“ü—Í‚Ílong int SCI1_getInt4(char prompt[])‚ğg‚¤B
+•\¦‚ÍC‰½‰ñ‚Å‚à‘±‚¯‚é‚à‚Ì‚Æ‚·‚éB
+’ñoƒtƒ@ƒCƒ‹‚É‚ÍÀsŒ‹‰Ê‚ğ“\‚è•t‚¯‚é‚±‚ÆB
+
+2.g—p‚µ‚½ƒvƒƒOƒ‰ƒ€‚¨‚æ‚ÑÀsŒ‹‰Ê
+#include <3048fone.h>
+#include "h8_3048fone.h"
+
+void dump(unsigned long int start, unsigned int num){
+    unsigned long int i,ad;
+    unsigned int j;
+    initSCI1(); /*SCI-ch1‚Ì‰Šú‰»*/
+    initPushSW(); /*‰Ÿ‚µƒ{ƒ^ƒ“ƒXƒCƒbƒ`‚Ì‰Šú‰»*/
+    SCI1_printf("memory dump 0x%05lx-0x%05lx\n",start,start+num-1);
+    SCI1_printf("     ");
+    for(j=0;j<16;j++){
+        SCI1_printf(" +%X",j);/*Å‰‚Ìs*/
+    }
+    SCI1_printf("\n");
+    for(i=start;i<=start+num;i+=16){
+        SCI1_printf("%05lx",i);
+        for(j=0;j<16;j++){
+            ad=i+j;
+            SCI1_printf(" %02x",*(unsigned char *)ad);/*ƒ|ƒCƒ“ƒ^‚Åƒƒ‚ƒŠ‚ğo‚·*/
+        }
+        SCI1_printf("\n");
+    }
+}
+
+main()
+{
+	unsigned long int ad;
+	initSCI1(); /*SCI-ch1‚Ì‰Šú‰»*/
+	
+	while(1){
+		ad = SCI1_getInt4("start address (0xnnnnn) =");
+		dump(ad,256);
+	}
+}
+
+
+/*ÀsŒ‹‰Ê
+ÿstart address (0xnnnnn) =0x400
+memory dump 0x00400-0x004ff
+      +0 +1 +2 +3 +4 +5 +6 +7 +8 +9 +A +B +C +D +E +F
+00400 00 10 0f 86 5e 00 02 46 79 01 00 10 0f f0 5e 00
+00410 01 e4 0f f0 5e 00 03 28 7a 17 00 00 00 10 01 00
+00420 6d 76 54 70 01 00 6d f6 7a 37 00 00 00 10 0f 86
+00430 55 38 79 01 00 10 0f f0 5e 00 02 e2 0f f0 5e 00
+00440 03 28 7a 17 00 00 00 10 01 00 6d 76 54 70 6d f6
+00450 0c 86 a6 0a 46 04 f8 0d 55 f4 28 b4 73 78 47 fa
+00460 36 b3 7f b4 72 70 6d 76 54 70 01 00 6d f6 0f 86
+00470 40 06 68 68 55 d8 0b 76 68 68 46 f6 01 00 6d 76
+00480 54 70 19 11 40 0a 79 08 10 68 1b 58 46 fc 0b 51
+00490 1d 01 45 f2 54 70 19 11 40 0a 79 08 00 04 1b 58
+004a0 46 fc 0b 51 1d 01 45 f2 54 70 0c 80 28 c6 e8 f0
+004b0 14 08 38 c6 7f c6 70 50 79 00 00 05 55 d8 7f c6
+004c0 72 50 79 00 00 28 40 ce 6d f6 0c 8e 11 88 11 88
+004d0 11 88 11 88 e8 0f 55 d2 ee 0f 0c e8 55 cc 6d 76
+004e0 54 70 6d f6 0c 8e 7f c6 70 40 11 88 11 88 11 88
+004f0 11 88 e8 0f 55 b4 ee 0f 0c e8 55 ae 7f c6 72 40
+00500 6d 76 54 70 01 00 6d f6 0f 86 40 04 6c 68 55 d2
+start address (0xnnnnn) =0xffe00
+memory dump 0xffe00-0xffeff
+      +0 +1 +2 +3 +4 +5 +6 +7 +8 +9 +A +B +C +D +E +F
+ffe00 be ff ff ef fd ff ff ef df 77 ff fd ef bf ef ff
+ffe10 7f bf bf bf bd bd ff fc 7b df fe ff df 7f 5f fe
+ffe20 fd df bf 2f df ff ff fe bf ff fe 3e ff ff fe ff
+ffe30 ff 9f ef ff ef bf ff ff fe b7 de db ff f7 6f fb
+ffe40 af f7 ff bf af af ff ff bf f7 ff fb ff d7 ff ff
+ffe50 ff ff ff ff f7 ef ff df ef f7 db ff db ff ff df
+ffe60 af ef ff ff bf 7d ff be ff d5 ff ff ff d5 ff ff
+ffe70 ff df fe a4 0a f4 fe a8 fe aa 00 00 02 52 00 0f
+ffe80 00 f4 00 00 0a b4 00 0f fe a9 ff bf ff ff bf ff
+ffe90 73 bd ff ff ff f3 7f df fd fe 7f 67 ff ff e7 ff
+ffea0 66 66 65 66 66 66 65 61 30 33 33 00 00 0f fe f2
+ffeb0 fe 0f fe ab 00 00 0e fc 30 00 00 00 02 46 00 2b
+ffec0 00 10 00 00 02 2a 00 00 05 ee 00 00 00 00 00 0f
+ffed0 00 00 00 0f 00 00 00 0f fe d0 00 00 00 04 00 00
+ffee0 00 6a 00 0f fe f2 00 00 00 08 00 00 0d 9a 00 00
+ffef0 00 f7 00 00 00 00 00 00 30 78 00 30 30 30 78 34
+fff00 30 30 00 08 08 08 08 08 00 00 0d da 00 00 01 56
+start address (0xnnnnn) =0xfff00
+memory dump 0xfff00-0xfffff
+      +0 +1 +2 +3 +4 +5 +6 +7 +8 +9 +A +B +C +D +E +F
+fff00 30 30 00 08 08 08 08 08 00 00 0d da 00 00 01 56
+fff10 ff ff ff ff ff ff ff ff ff ff ff ff 7f 00 00 00
+fff20 ff ff ff ff 41 ff ff 00 ff ff ff ff a5 ff ff 00
+fff30 ff ff ff ff 77 ff ff 00 ff ff ff ff 2d ff ff 00
+fff40 00 00 00 00 00 00 ff f0 00 ff ff 00 00 00 00 00
+fff50 ff 00 ff ff ff ff ff ff ff ff ff ff fe fc 40 0f
+fff60 e0 e0 80 c0 80 88 f8 f8 00 00 ff ff ff ff 80 88
+fff70 f8 f8 00 00 ff ff ff ff 80 88 f8 f8 00 00 ff ff
+fff80 ff ff 80 88 f8 f8 00 00 ff ff ff ff ff ff ff ff
+fff90 ff ff 80 88 f8 f8 00 00 ff ff ff ff ff ff ff ff
+fffa0 f0 ff 00 00 00 00 ff ff 18 00 ff 3f 02 07 00 ff
+fffb0 00 ff 00 ff 84 00 f2 a3 00 13 30 30 40 0a f2 ff
+fffc0 ff ff ff ff ff ff ff ff ff ff fc fb ff ff ff ff
+fffd0 ff ff ff ff ff ff ff ff 00 ff f0 f0 00 00 1f 1f
+fffe0 00 00 00 00 00 00 00 00 00 7e ff ff ff ff f3 ff
+ffff0 ff c7 0b fe 00 00 0f ff 00 00 ff ff ff ff ff ff
+100000 00 00 01 00 ff ff ff ff ff ff ff ff ff ff ff ff
+start address (0xnnnnn) =
+*/
+
+
+3.l@
+SCI1_getInt4(char prompt[])‚ğ—p‚¢‚é‚±‚Æ‚ÅƒAƒhƒŒƒX“ü—Í‚ğó‚¯æ‚é‚±‚Æ‚ª‚Å‚«‚é‚±‚Æ‚ª•ª‚©‚Á‚½D
+
+4.‚Ü‚Æ‚ß
+‰Û‘è’Ê‚è‚ÉƒvƒƒOƒ‰ƒ€‚ğì¬‚Å‚«‚½D

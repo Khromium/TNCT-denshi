@@ -1,0 +1,56 @@
+mp1ex01.txt
+
+1．課題
+「bitoperation.c」で演算結果は２進法表現だけであるが，同じ変数について2進法表現と10進法表現が同時に見えるように改造しなさい。
+
+負の整数を右シフトし時（例えばxの値を-1024などにしてz=x>>3;），どうなるか試して考察しなさい。また，unsigned short int u;を導入するように改造し，uに無理やり-1024などを代入してz=u>>3にした時，どうなるか試して考察しなさい。
+
+
+2. 使用したプログラム
+#include <3048fone.h>
+#include "h8_3048fone.h"
+
+main()
+{
+    short int x,y,z;
+    initSCI1(); /*シリアル通信ユニット　SCI-ch1の初期化*/
+    SCI1_printf("Hello. How are you?\n"); /*printfと同様*/
+    SCI1_printf("Let's make an bit operation\n");
+    while (1) {
+        x=SCI1_getInt("the first  number = ");
+        y=SCI1_getInt("the second number = ");
+	u=SCI1_getInt("the "u"  number = ");
+        z=x&y;
+        SCI1_printf("x=%b y=%b z=x&y=%b\n",x,y,z);
+        SCI1_printf("x=%d y=%d z=x&y=%d\n",x,y,z);
+        z=x|y;
+        SCI1_printf("x=%b y=%b z=x|y=%b\n",x,y,z);
+        SCI1_printf("x=%d y=%d z=x|y=%d\n",x,y,z);
+        z=x^y;
+        SCI1_printf("x=%b y=%b z=x^y=%b\n",x,y,z);
+        SCI1_printf("x=%d y=%d z=x^y=%d\n",x,y,z);
+        z=x>>3;
+        SCI1_printf("x=%b z=x>>3=%b\n",x,z);
+        SCI1_printf("x=%d z=x>>3=%d\n",x,z);
+        z=y<<3;
+        SCI1_printf("y=%b z=y<<3=%b\n",y,z);
+        SCI1_printf("y=%d z=y<<3=%d\n",y,z);
+        u=u>>3;
+        SCI1_printf("u=%b\n",u);
+        SCI1_printf("u=%d\n",u);
+
+    }
+}
+
+
+3.　考察
+・-1024を右に3bitシフトした時
+十進表示では-128となった。
+これは2進数で桁が3つ分移動し、ずれたところに1が入ったため2の3乗、8分1の値の-128になったと言える。二進数表示では1111 1100 0000 0000から1111 1111 1000 0000になった。
+
+・unsigned short int型の変数を使って-1024を代入して右に3bitシフトした時
+結果は十進表示では8064になった。これは右シフトした時に空いたところに0が入ったために正の値になったと言える。二進数表示では1111 1100 0000 0000から1 1111 1000 0000になった。
+
+4.　まとめ
+・マイコンの基本操作がわかった。
+・右シフト時に代入される値がintだと1が、unsinged short int の場合は0が空いたところに代入されることがわかった。

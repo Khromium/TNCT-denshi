@@ -1,0 +1,45 @@
+mp1ex02.txt
+
+1．課題
+short int 型の変数を２進法表現で見たとき，1の個数を数える関数int countOnes(short int value)を作りなさい。
+　　例えばこの関数に10進法表現の10を与えると，2進法表現では1010なので，2を返す。
+　　例えばこの関数に10進法表現の13を与えると，2進法表現では1101なので，3を返す。
+　　テストするmainもつくり，十分にテストしてから提出しなさい。どのように考えて十分なテストだと考えたのか，考察に書きなさい。
+
+2. 使用したプログラム
+#include <3048fone.h>
+#include "h8_3048fone.h"
+
+/* short int 型の変数を２進法表現で見たとき，/
+/  有効桁数内にある0の個数を数える関数      */
+int countOnes(short int value)
+{
+    int count=0;
+    while (value!=0) {
+        count+=value&1;
+        value=((unsigned short int)value)>>1;
+        /*unsignedにみなさないと，valueが負の数のとき，
+        最上位ビットが保たれてしまい，ループから抜け出
+        せなくなる*/
+    }
+    return count;
+}
+
+main()
+{
+    short int x,y;
+    initSCI1(); /*シリアル通信ユニット　SCI-ch1の初期化*/
+    SCI1_printf("Hello. How are you?\n"); /*printfと同様*/
+    SCI1_printf("Let's count ones\n");
+    while (1) {
+        x=SCI1_getInt("the number = ");
+        y=countZeros(x);
+        SCI1_printf("x=%b y=%d\n",x,y);
+    }
+}
+
+3. 考察
+　1の個数を数えるにはvalueの値が出ない限り，1づつシフトするループを作り，その中でvalueと1のandをとることで1の個数を数えることができる．
+
+4. まとめ
+　ビット演算と右シフトを用いることで0や1の数は数えることができた．

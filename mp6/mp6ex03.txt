@@ -1,0 +1,110 @@
+mp6ex03.txt
+
+
+1.課題
+int2nd.cを元にして次のプログラムを作りなさい。
+（実行の様子を検察して，その結果，気付いた事を含め，別途指定された書式で括弧の中ファイル名で提出しなさい）
+
+　　PushSWはどれも押されていない　→　2つのLEDは暗く点灯（1/10）
+　　PushSW 0 を押す → LED 0 中間点灯（2/10）　　LED 1消灯
+　　PushSW 1 を押す → LED 0 中間点灯（5/10）　　LED 1消灯
+　　PushSW 0とPushSW 1 を押す → LED 0 明るく点灯（10/10）　　LED 1消灯
+　　PushSW 2 を押す → LED 1 中間点灯（2/10）　　LED 0消灯
+　　PushSW 3 を押す → LED 1 中間点灯（5/10）　　LED 0消灯
+　　PushSW 2とPushSW 3 を押す → LED 1 明るく点灯（10/10）　　LED 0消灯
+　　それ以外の状態ではすべて消灯
+　　点灯周期は10msとする。
+
+　　unsigned char getPushSW(void)　を使うと便利
+　　　押しボタンスイッチの取得　ビット反転し，ONは1，OFFは0で取得される。
+　　　押しボタンスイッチの状況は第0-第3ビットに現れる。
+
+2.使用したプログラム
+/**********************************************************
+プッシュスイッチと時間割り込みによってLEDのPWM制御を行う
+**********************************************************/
+#include <3048fone.h>
+#include "h8_3048fone.h"
+
+volatile int led0,led1;
+const int period=10; /*周期10msec*/
+const int low=1;
+
+main()
+{
+    unsigned char status=0;
+    initLed();
+    initPushSW();
+    led0=led1=0;
+    initTimer1Int(1000); /*タイマ割り込み1msec */
+    /*単位はμsec ITUch1のみ使用*/
+    E_INT();        /*CPU割り込み許可*/
+    startTimer1();  /*時間割り込みタイマスタート*/
+    while(1){
+        status=getPushSW();
+        switch(status){
+        case 0x00:
+            led0=1;
+            led1=1;
+            break;
+        case 0x01:
+            led0=2;
+            led1=0;
+            break;
+        case 0x02:
+            led0=5;
+            led1=0;
+            break;
+        case 0x03:
+            led0=10;
+            led1=0;
+            break;
+        case 0x04:
+            led0=0;
+            led1=2;
+            break;
+        case 0x08:
+            led0=0;
+            led1=5;
+            break;
+        case 0x0C:
+            led0=0;
+            led1=10;
+            break;
+        }
+    }
+}
+
+#pragma asm
+.SECTION    MYVEC, DATA, LOCATE=H'000070
+.ORG        H'000070  ;IMIA1
+.DATA.L     _TimerIntFunc
+.SECTION    P,CODE,ALIGN=2 ;
+#pragma endasm
+
+#pragma interrupt (TimerIntFunc)
+void TimerIntFunc() /*タイマ割り込みルーチン*/
+{
+    static int tick=0;
+    clearTimer1Flag();  /*タイマステータスフラグのクリア 忘れないこと*/
+    if (tick<led0) {
+        turnOnLed(0);
+    } else {
+        turnOffLed(0);
+    }
+    if (tick<led1) {
+        turnOnLed(1);
+    } else {
+        turnOffLed(1);
+    }
+    tick++;
+    if (tick==period) tick=0;
+}
+
+
+
+3.考察
+ON-OFFが01のビットで出ることから，それぞれの処理をswitch caseで16進数で場合分けすることでそれぞれのボタンにあった処理をすることができることが分かった．
+
+4.まとめ
+課題通りンプログラムを動作させることができた．

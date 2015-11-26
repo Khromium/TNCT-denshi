@@ -1,0 +1,80 @@
+mp3ex03.txt
+
+
+1.課題
+0.5秒ごとに点灯状態が変化し，次の点滅パターンを繰り返すプログラム
+　　左側2回点滅→右側2回点滅→左側1回点滅→右側1回点滅
+
+2.使用したプログラム
+#include <3048fone.h>
+#include "h8_3048fone.h"
+
+void waitmsec(int msec)
+{
+    int i,j;
+    for (i=0;i<msec;i++) {
+        for (j=0;j<4190;j++);    /*4190は実測によって求めた値 25MHz駆動*/
+    }
+}
+
+main()
+{
+    initLed();  /*LED初期化*/
+    while(1) {
+        turnOnLed(1); 
+        turnOffLed(0);
+        waitmsec(500);
+        
+        turnOffLed(1);
+        turnOffLed(0);
+        waitmsec(500);
+        
+        turnOnLed(1); 
+        turnOffLed(0);
+        waitmsec(500);
+        
+        turnOffLed(1);
+        turnOffLed(0);
+        waitmsec(500);
+        
+       /*反対*/
+        turnOnLed(0); 
+        turnOffLed(1);
+        waitmsec(500);
+        
+        turnOffLed(0);
+        turnOffLed(1);
+        waitmsec(500);
+        
+        turnOnLed(0); 
+        turnOffLed(1);
+        waitmsec(500);
+        
+        turnOffLed(0);
+        turnOffLed(1);
+        waitmsec(500);
+        
+        /*一回*/
+        turnOnLed(1); 
+        turnOffLed(0);
+        waitmsec(500);
+        
+        turnOffLed(1);
+        turnOffLed(0);
+        waitmsec(500);
+        
+        turnOnLed(0); 
+        turnOffLed(1);
+        waitmsec(500);
+        
+        turnOffLed(0);
+        turnOffLed(1);
+        waitmsec(500);
+    }
+}
+
+3.考察
+　turnOnLedによってLEDの点灯を指定し，turnOffLedによってLEDの消灯を指定，また，waitmsecによって状態の待機をさせることで課題通りに動作した．
+
+4.まとめ
+　課題通りにプログラムを作成できた．
